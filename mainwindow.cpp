@@ -228,7 +228,35 @@ void MainWindow::on_pushButton_5_clicked()      //隐藏/显示注释
         return;
     }
 }
-
+void MainWindow::on_pushButton_6_clicked() //打开
+{
+    QTextCodec *codec = QTextCodec::codecForName("GBK");
+    //打开文件选择对话框，选择文件，获取文件路径
+    QString fileName = QFileDialog::getOpenFileName(
+                    this, tr("open image file"),
+                    "./", tr("List files(*.txt *.php *.dpl *.m3u *.m3u8 *.xspf *.c);;All files (*.*)"));
+    if(fileName.isEmpty()){
+        ui->textEdit->setText("用户取消操作！！");
+    }
+    else {
+            //ui->textEdit->setText(fileName);//显示文件路径
+            QFile f(fileName);
+            if(!f.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                ui->textEdit->setText("Fail！！");
+                return;
+            }
+            QTextStream Input(&f);
+            Input.setCodec(codec);
+            QString lineStr;
+            while(!Input.atEnd())
+            {
+                lineStr = lineStr + Input.readLine() + "\n";
+            }
+            ui->textEdit->setText(lineStr);//显示文件内容
+            f.close();
+    }
+}
 
 
 
